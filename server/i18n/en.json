@@ -3967,6 +3967,10 @@
     "translation": "Could not parse auth data out of {{.Service}} user object."
   },
   {
+    "id": "api.user.oauth.get_settings.app_error",
+    "translation": "Failed to get {{.Service}} settings"
+  },
+  {
     "id": "api.user.create_email_token.error",
     "translation": "Failed to create token data for email verification"
   },

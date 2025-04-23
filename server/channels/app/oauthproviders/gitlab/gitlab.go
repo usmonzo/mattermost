@@ -84,7 +84,7 @@ func (glu *GitLabUser) getAuthData() string {
 	return strconv.FormatInt(glu.Id, 10)
 }
 
-func (gp *GitLabProvider) GetUserFromJSON(c request.CTX, data io.Reader, tokenUser *model.User) (*model.User, error) {
+func (gp *GitLabProvider) GetUserFromJSON(c request.CTX, data io.Reader, tokenUser *model.User, settings *model.SSOSettings) (*model.User, error) {
 	glu, err := gitLabUserFromJSON(data)
 	if err != nil {
 		return nil, err
