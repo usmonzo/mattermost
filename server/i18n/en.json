@@ -3967,10 +3967,6 @@
     "translation": "Could not parse auth data out of {{.Service}} user object."
   },
   {
-    "id": "api.user.oauth.get_settings.app_error",
-    "translation": "Failed to get {{.Service}} settings"
-  },
-  {
     "id": "api.user.create_email_token.error",
     "translation": "Failed to create token data for email verification"
   },
@@ -4201,6 +4197,10 @@
   {
     "id": "api.user.login_with_desktop_token.not_oauth_or_saml_user.app_error",
     "translation": "User is not an OAuth or SAML user."
+  },
+  {
+    "id": "api.user.oauth.get_settings.app_error",
+    "translation": "Failed to get {{.Service}} settings"
   },
   {
     "id": "api.user.oauth_to_email.context.app_error",
