@@ -1269,7 +1269,7 @@ func (s *SSOSettings) setDefaults(scope, authEndpoint, tokenEndpoint, userAPIEnd
 		s.ButtonColor = NewPointer(buttonColor)
 	}
 
-	// Note: At the moment, we only use the preferred username for OpenID Connect.
+	// Note: Preferred username is not supported for Google.
 	if s.UsePreferredUsername == nil {
 		s.UsePreferredUsername = NewPointer(false)
 	}
