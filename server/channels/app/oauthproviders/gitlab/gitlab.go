@@ -35,17 +35,20 @@ func init() {
 
 func userFromGitLabUser(logger mlog.LoggerIFace, glu *GitLabUser, settings *model.SSOSettings) *model.User {
 	user := &model.User{}
-	username := glu.Username
-	if username == "" {
+
+	// set username in order of preference
+	var username string
+	if settings != nil && model.SafeDereference(settings.UsePreferredUsername) && glu.PreferredUsername != "" {
+		// to maintain consistency with other providers, we split the username by @ (if present) and
+		// take the first part (but only for the preferred username)
+		username = strings.Split(glu.PreferredUsername, "@")[0]
+	} else if glu.Username != "" {
+		username = glu.Username
+	} else {
 		username = glu.Login
 	}
-
-	if settings != nil && model.SafeDereference(settings.UsePreferredUsername) && glu.PreferredUsername != "" {
-		// to maintain consistency with other providers, we split the preferred username by @ and take the first part
-		username = strings.Split(glu.PreferredUsername, "@")[0]
-	}
-
 	user.Username = model.CleanUsername(logger, username)
+
 	splitName := strings.Split(glu.Name, " ")
 	if len(splitName) == 2 {
 		user.FirstName = splitName[0]
