@@ -723,15 +723,14 @@ func isValidGuestRoles(data UserImportData) bool {
 	var hasTeams, hasChannels bool
 
 	// counters for guest roles for teams and channels
-	var gtc, ctc int
+	var teamGuestCount, channelGuestCount int
 	var totalTeams, totalChannels int
 
 	totalTeams = len(*data.Teams)
 	hasTeams = totalTeams > 0
-
 	for _, team := range *data.Teams {
 		if team.Roles != nil && model.IsInRole(*team.Roles, model.TeamGuestRoleId) {
-			gtc++
+			teamGuestCount++
 		}
 
 		// Check if the team has any channels
@@ -742,18 +741,18 @@ func isValidGuestRoles(data UserImportData) bool {
 
 			for _, channel := range *team.Channels {
 				if channel.Roles != nil && model.IsInRole(*channel.Roles, model.ChannelGuestRoleId) {
-					ctc++
+					channelGuestCount++
 				}
 			}
 		}
 	}
 
 	// Set flags based on whether all available teams/channels have guest roles
-	if hasTeams && gtc == totalTeams {
+	if hasTeams && teamGuestCount == totalTeams {
 		isTeamGuest = true
 	}
 
-	if hasChannels && ctc == totalChannels {
+	if hasChannels && channelGuestCount == totalChannels {
 		isChannelGuest = true
 	}
 
