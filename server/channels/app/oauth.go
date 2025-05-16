@@ -624,6 +624,7 @@ func (a *App) LoginByOAuth(c request.CTX, service string, userData io.Reader, te
 			map[string]any{"Service": service}, "", http.StatusBadRequest).Wrap(err)
 	}
 
+	c.Logger().Error("<><> LoginByOAuth calling provider.GetUserFromJSON 1")
 	authUser, err := provider.GetUserFromJSON(c, bytes.NewReader(buf.Bytes()), tokenUser, settings)
 	if err != nil {
 		return nil, model.NewAppError("LoginByOAuth", "api.user.login_by_oauth.parse.app_error",
@@ -681,6 +682,7 @@ func (a *App) CompleteSwitchWithOAuth(c request.CTX, service string, userData io
 			map[string]any{"Service": service}, "", http.StatusBadRequest).Wrap(err)
 	}
 
+	c.Logger().Error("<><> CompleteSwitchWithOAuth calling provider.GetUserFromJSON 2")
 	ssoUser, err1 := provider.GetUserFromJSON(c, userData, tokenUser, settings)
 	if err1 != nil {
 		return nil, model.NewAppError("CompleteSwitchWithOAuth", "api.user.complete_switch_with_oauth.parse.app_error",
