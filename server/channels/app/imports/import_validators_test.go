@@ -1549,19 +1549,11 @@ func checkNoError(t *testing.T, err *model.AppError) {
 	require.Nil(t, err, "Unexpected Error: %v", err)
 }
 
-<<<<<<< Updated upstream
-func TestIsValidGuestRoles(t *testing.T) {
-	testCases := []struct {
-		name     string
-		input    UserImportData
-		expected bool
-=======
 func TestValidateGuestRoles(t *testing.T) {
-	var testCases = []struct {
+	testCases := []struct {
 		name        string
 		input       UserImportData
 		expectError bool
->>>>>>> Stashed changes
 	}{
 		{
 			name: "Valid case: User is a guest in all places",
@@ -1674,8 +1666,8 @@ func TestValidateGuestRoles(t *testing.T) {
 			expectError: false,
 		},
 		{
-			name:     "Valid case: User does not have any role defined in any place",
-			input:    UserImportData{},
+			name:        "Valid case: User does not have any role defined in any place",
+			input:       UserImportData{},
 			expectError: false,
 		},
 		{
