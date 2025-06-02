@@ -1549,11 +1549,19 @@ func checkNoError(t *testing.T, err *model.AppError) {
 	require.Nil(t, err, "Unexpected Error: %v", err)
 }
 
+<<<<<<< Updated upstream
 func TestIsValidGuestRoles(t *testing.T) {
 	testCases := []struct {
 		name     string
 		input    UserImportData
 		expected bool
+=======
+func TestValidateGuestRoles(t *testing.T) {
+	var testCases = []struct {
+		name        string
+		input       UserImportData
+		expectError bool
+>>>>>>> Stashed changes
 	}{
 		{
 			name: "Valid case: User is a guest in all places",
@@ -1568,7 +1576,7 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: true,
+			expectError: false,
 		},
 		{
 			name: "Invalid case: User is a guest in a team but not in another team",
@@ -1589,7 +1597,7 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: false,
+			expectError: true,
 		},
 		{
 			name: "Invalid case: User is a guest in a team but not in another team and has no channel membership",
@@ -1608,14 +1616,14 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: false,
+			expectError: true,
 		},
 		{
 			name: "Valid case: User is system guest with no teams",
 			input: UserImportData{
 				Roles: model.NewPointer(model.SystemGuestRoleId),
 			},
-			expected: true,
+			expectError: false,
 		},
 		{
 			name: "Valid case: User is system guest with empty teams array",
@@ -1623,7 +1631,7 @@ func TestIsValidGuestRoles(t *testing.T) {
 				Roles: model.NewPointer(model.SystemGuestRoleId),
 				Teams: &[]UserTeamImportData{},
 			},
-			expected: true,
+			expectError: false,
 		},
 		{
 			name: "Invalid case: User has mixed roles",
@@ -1638,7 +1646,7 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: false,
+			expectError: true,
 		},
 		{
 			name: "Valid case: User is system guest with team guest role but no channels",
@@ -1651,7 +1659,7 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: true,
+			expectError: false,
 		},
 		{
 			name: "Valid case: User is system guest with team guest role and nil channels",
@@ -1663,12 +1671,12 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: true,
+			expectError: false,
 		},
 		{
 			name:     "Valid case: User does not have any role defined in any place",
 			input:    UserImportData{},
-			expected: true,
+			expectError: false,
 		},
 		{
 			name: "Valid case: User is not a guest in any place",
@@ -1683,14 +1691,18 @@ func TestIsValidGuestRoles(t *testing.T) {
 					},
 				},
 			},
-			expected: true,
+			expectError: false,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			result := isValidGuestRoles(tc.input)
-			assert.Equal(t, tc.expected, result, tc.name)
+			err := validateGuestRoles(tc.input)
+			if tc.expectError {
+				assert.NotNil(t, err, tc.name)
+			} else {
+				assert.Nil(t, err, tc.name)
+			}
 		})
 	}
 }
