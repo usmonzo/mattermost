@@ -1561,15 +1561,18 @@ func TestConfigSanitize(t *testing.T) {
 }
 
 func TestPluginSettingsSanitize(t *testing.T) {
-	plugins := map[string]map[string]any{
-		"plugin.id": {
-			"somesetting":  "some value",
-			"secrettext":   "a secret",
-			"secretnumber": 123,
-		},
-		"another.plugin": {
-			"somesetting": 456,
-		},
+	const (
+		pluginID1 = "plugin.id"
+		pluginID2 = "another.plugin"
+	)
+	settingsPlugin1 := map[string]any{
+		"somesetting":  "some value",
+		"secrettext":   "a secret",
+		"secretnumber": 123,
+	}
+
+	settingsPlugin2 := map[string]any{
+		"somesetting": 456,
 	}
 
 	for name, tc := range map[string]struct {
@@ -1587,7 +1590,7 @@ func TestPluginSettingsSanitize(t *testing.T) {
 		"one plugin installed without settings schema": {
 			manifests: []*Manifest{
 				{
-					Id:             "plugin.id",
+					Id:             pluginID1,
 					SettingsSchema: nil,
 				},
 			},
@@ -1596,12 +1599,12 @@ func TestPluginSettingsSanitize(t *testing.T) {
 		"one plugin installed empty settings schema": {
 			manifests: []*Manifest{
 				{
-					Id:             "plugin.id",
+					Id:             pluginID1,
 					SettingsSchema: &PluginSettingsSchema{},
 				},
 			},
 			expected: map[string]map[string]any{
-				"plugin.id": {
+				pluginID1: {
 					"somesetting":  FakeSetting,
 					"secrettext":   FakeSetting,
 					"secretnumber": FakeSetting,
@@ -1611,14 +1614,14 @@ func TestPluginSettingsSanitize(t *testing.T) {
 		"one plugin installed empty settings list": {
 			manifests: []*Manifest{
 				{
-					Id: "plugin.id",
+					Id: pluginID1,
 					SettingsSchema: &PluginSettingsSchema{
 						Settings: []*PluginSetting{},
 					},
 				},
 			},
 			expected: map[string]map[string]any{
-				"plugin.id": {
+				pluginID1: {
 					"somesetting":  FakeSetting,
 					"secrettext":   FakeSetting,
 					"secretnumber": FakeSetting,
@@ -1628,7 +1631,7 @@ func TestPluginSettingsSanitize(t *testing.T) {
 		"one plugin installed": {
 			manifests: []*Manifest{
 				{
-					Id: "plugin.id",
+					Id: pluginID1,
 					SettingsSchema: &PluginSettingsSchema{
 						Settings: []*PluginSetting{
 							{
@@ -1651,7 +1654,7 @@ func TestPluginSettingsSanitize(t *testing.T) {
 				},
 			},
 			expected: map[string]map[string]any{
-				"plugin.id": {
+				pluginID1: {
 					"somesetting":  "some value",
 					"secrettext":   FakeSetting,
 					"secretnumber": FakeSetting,
@@ -1661,7 +1664,7 @@ func TestPluginSettingsSanitize(t *testing.T) {
 		"two plugins installed": {
 			manifests: []*Manifest{
 				{
-					Id: "plugin.id",
+					Id: pluginID1,
 					SettingsSchema: &PluginSettingsSchema{
 						Settings: []*PluginSetting{
 							{
@@ -1683,7 +1686,7 @@ func TestPluginSettingsSanitize(t *testing.T) {
 					},
 				},
 				{
-					Id: "another.plugin",
+					Id: pluginID2,
 					SettingsSchema: &PluginSettingsSchema{
 						Settings: []*PluginSetting{
 							{
@@ -1696,12 +1699,12 @@ func TestPluginSettingsSanitize(t *testing.T) {
 				},
 			},
 			expected: map[string]map[string]any{
-				"plugin.id": {
+				pluginID1: {
 					"somesetting":  "some value",
 					"secrettext":   FakeSetting,
 					"secretnumber": FakeSetting,
 				},
-				"another.plugin": {
+				pluginID2: {
 					"somesetting": 456,
 				},
 			},
@@ -1710,7 +1713,11 @@ func TestPluginSettingsSanitize(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			c := PluginSettings{}
 			c.SetDefaults(*NewLogSettings())
-			maps.Copy(c.Plugins, plugins)
+
+			c.Plugins[pluginID1] = make(map[string]any)
+			maps.Copy(c.Plugins[pluginID1], settingsPlugin1)
+			c.Plugins[pluginID2] = make(map[string]any)
+			maps.Copy(c.Plugins[pluginID2], settingsPlugin2)
 
 			c.Sanitize(tc.manifests)
 
