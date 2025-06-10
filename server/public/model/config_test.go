@@ -1593,6 +1593,21 @@ func TestPluginSettingsSanitize(t *testing.T) {
 			},
 			expected: map[string]map[string]any{},
 		},
+		"one plugin installed empty settings schema": {
+			manifests: []*Manifest{
+				{
+					Id:             "plugin.id",
+					SettingsSchema: &PluginSettingsSchema{},
+				},
+			},
+			expected: map[string]map[string]any{
+				"plugin.id": {
+					"somesetting":  FakeSetting,
+					"secrettext":   FakeSetting,
+					"secretnumber": FakeSetting,
+				},
+			},
+		},
 		"one plugin installed": {
 			manifests: []*Manifest{
 				{
