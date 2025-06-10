@@ -3379,6 +3379,7 @@ func (s *PluginSettings) Sanitize(pluginManifests []*Manifest) {
 	for id, settings := range s.Plugins {
 		manifest := manifestMap[id]
 
+		// Label for the outer loop to allow skipping to the next setting when the current one is declared as not a secret.
 	settings:
 		for key := range settings {
 			if manifest == nil ||
@@ -3390,7 +3391,7 @@ func (s *PluginSettings) Sanitize(pluginManifests []*Manifest) {
 				break
 			}
 
-			// Check if the settings is defined as not a secret by the plugin
+			// Check if the settings is defined as not a secret by the plugin.
 			for _, definedSetting := range manifest.SettingsSchema.Settings {
 				if strings.EqualFold(definedSetting.Key, key) && !definedSetting.Secret {
 					continue settings
