@@ -1608,6 +1608,23 @@ func TestPluginSettingsSanitize(t *testing.T) {
 				},
 			},
 		},
+		"one plugin installed empty settings list": {
+			manifests: []*Manifest{
+				{
+					Id: "plugin.id",
+					SettingsSchema: &PluginSettingsSchema{
+						Settings: []*PluginSetting{},
+					},
+				},
+			},
+			expected: map[string]map[string]any{
+				"plugin.id": {
+					"somesetting":  FakeSetting,
+					"secrettext":   FakeSetting,
+					"secretnumber": FakeSetting,
+				},
+			},
+		},
 		"one plugin installed": {
 			manifests: []*Manifest{
 				{
