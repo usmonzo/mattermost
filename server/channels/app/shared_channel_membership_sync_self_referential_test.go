@@ -25,7 +25,7 @@ import (
 )
 
 func TestSharedChannelMembershipSyncSelfReferential(t *testing.T) {
-	th := setupSharedChannels(t).InitBasic()
+	th := setupSharedChannels(t).InitBasic(t)
 	defer th.TearDown()
 
 	ss := th.App.Srv().Store()
