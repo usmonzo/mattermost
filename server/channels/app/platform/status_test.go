@@ -55,11 +55,11 @@ func TestTruncateDNDEndTime(t *testing.T) {
 }
 
 func TestQueueSetStatusOffline(t *testing.T) {
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 
 	defer func() {
 		// First tear down the test environment
-		th.TearDown()
+		th.TearDown(t)
 
 		// Then verify that the status update processor has properly shut down
 		// by checking that the done signal channel is closed

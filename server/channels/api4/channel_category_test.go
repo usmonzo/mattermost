@@ -19,7 +19,7 @@ import (
 
 func TestCreateCategoryForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should silently prevent the user from creating a category with an invalid channel ID", func(t *testing.T) {
@@ -166,7 +166,7 @@ func TestCreateCategoryForTeamForUser(t *testing.T) {
 
 func TestUpdateCategoryForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should update the channel order of the Channels category", func(t *testing.T) {
@@ -454,7 +454,7 @@ func TestUpdateCategoryForTeamForUser(t *testing.T) {
 
 func TestUpdateCategoriesForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should silently prevent the user from adding an invalid channel ID", func(t *testing.T) {
@@ -552,7 +552,7 @@ func TestUpdateCategoriesForTeamForUser(t *testing.T) {
 
 func TestGetCategoriesForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should return categories when user has permission", func(t *testing.T) {
@@ -605,7 +605,7 @@ func TestGetCategoriesForTeamForUser(t *testing.T) {
 
 func TestGetCategoryOrderForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should return category order when user has permission", func(t *testing.T) {
@@ -664,7 +664,7 @@ func TestGetCategoryOrderForTeamForUser(t *testing.T) {
 
 func TestUpdateCategoryOrderForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should update order", func(t *testing.T) {
@@ -783,7 +783,7 @@ func TestUpdateCategoryOrderForTeamForUser(t *testing.T) {
 
 func TestGetCategoryForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	t.Run("should return category when user has permission", func(t *testing.T) {
@@ -882,7 +882,7 @@ func TestGetCategoryForTeamForUser(t *testing.T) {
 
 func TestValidateSidebarCategory(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	// Create a test context with logger once for all subtests
@@ -1005,7 +1005,7 @@ func TestValidateSidebarCategory(t *testing.T) {
 
 func TestValidateSidebarCategoryChannels(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 
 	// Create a test context with logger once for all subtests
@@ -1091,7 +1091,7 @@ func TestValidateSidebarCategoryChannels(t *testing.T) {
 
 func TestDeleteCategoryForTeamForUser(t *testing.T) {
 	mainHelper.Parallel(t)
-	th := Setup(t).InitBasic()
+	th := Setup(t).InitBasic(t)
 	defer th.TearDown()
 	t.Run("should move channels to default categories when custom category is deleted", func(t *testing.T) {
 		user, client := setupUserForSubtest(t, th)

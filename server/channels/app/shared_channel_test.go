@@ -105,8 +105,8 @@ func TestApp_CheckCanInviteToSharedChannel(t *testing.T) {
 // TestApp_RemoteUnsharing tests the functionality where a shared channel is unshared on one side and triggers an unshare on the remote cluster.
 // This test uses a self-referential approach where a server syncs with itself through real HTTP communication.
 func TestApp_RemoteUnsharing(t *testing.T) {
-	th := setupSharedChannels(t).InitBasic()
-	defer th.TearDown()
+	th := setupSharedChannels(t).InitBasic(t)
+	defer th.TearDown(t)
 
 	ss := th.App.Srv().Store()
 
@@ -441,8 +441,8 @@ func TestApp_RemoteUnsharing(t *testing.T) {
 }
 
 func TestSyncMessageErrChannelNotSharedResponse(t *testing.T) {
-	th := setupSharedChannels(t).InitBasic()
-	defer th.TearDown()
+	th := setupSharedChannels(t).InitBasic(t)
+	defer th.TearDown(t)
 
 	// Setup: Create a shared channel and remote cluster
 	ss := th.App.Srv().Store()
