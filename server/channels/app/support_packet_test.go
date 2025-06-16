@@ -24,7 +24,7 @@ import (
 func TestGenerateSupportPacket(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	err := th.App.SetPhase2PermissionsMigrationStatus(true)
 	require.NoError(t, err)
@@ -273,7 +273,7 @@ func TestGenerateSupportPacket(t *testing.T) {
 func TestGetPluginsFile(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	getJobList := func(t *testing.T) *model.SupportPacketPluginList {
 		t.Helper()
@@ -445,9 +445,9 @@ func TestGetSupportPacketStats(t *testing.T) {
 	})
 
 	// Reset test server
-	th.TearDown()
+	th.TearDown(t)
 	th = Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	t.Run("post count should be present if number of users extends AnalyticsSettings.MaxUsersForStatistics", func(t *testing.T) {
 		th.App.UpdateConfig(func(cfg *model.Config) {
@@ -468,7 +468,7 @@ func TestGetSupportPacketStats(t *testing.T) {
 func TestGetSupportPacketJobList(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	getJobList := func(t *testing.T) *model.SupportPacketJobList {
 		t.Helper()
@@ -582,7 +582,7 @@ func TestGetSupportPacketJobList(t *testing.T) {
 func TestGetSupportPacketPermissionsInfo(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	err := th.App.SetPhase2PermissionsMigrationStatus(true)
 	require.NoError(t, err)
@@ -669,7 +669,7 @@ func TestGetSupportPacketPermissionsInfo(t *testing.T) {
 func TestGetSupportPacketMetadata(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	t.Run("Happy path", func(t *testing.T) {
 		fileData, err := th.App.getSupportPacketMetadata(th.Context)

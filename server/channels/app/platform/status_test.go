@@ -15,7 +15,7 @@ import (
 
 func TestSaveStatus(t *testing.T) {
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	user := th.BasicUser
 
@@ -136,7 +136,7 @@ func TestQueueSetStatusOffline(t *testing.T) {
 
 func TestSetStatusOffline(t *testing.T) {
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	user := th.BasicUser
 

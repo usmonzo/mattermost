@@ -17,7 +17,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("unlicensed server shows hard-coded limits", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 
@@ -32,7 +32,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("user count should increase on creating new user and decrease on permanently deleting", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 
@@ -56,7 +56,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("user count should increase on creating new guest user and decrease on permanently deleting", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 
@@ -80,7 +80,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("user count should increase on creating new user and decrease on soft deleting", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 
@@ -105,7 +105,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("user count should increase on creating new guest user and decrease on soft deleting", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 
@@ -130,7 +130,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("user count should not change on creating or deleting bots", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 
@@ -154,7 +154,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("licensed server without seat count enforcement shows no limits", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		license := model.NewTestLicense("")
 		license.IsSeatCountEnforced = false
@@ -170,7 +170,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("licensed server with seat count enforcement shows license limits with grace period", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		userLimit := 100
 		license := model.NewTestLicense("")
@@ -189,7 +189,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("licensed server with seat count enforcement but no Users feature shows no limits", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		license := model.NewTestLicense("")
 		license.IsSeatCountEnforced = true
@@ -206,7 +206,7 @@ func TestGetServerLimits(t *testing.T) {
 
 	t.Run("licensed server with seat count enforcement and zero Users shows zero limits", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		userLimit := 0
 		license := model.NewTestLicense("")
@@ -229,7 +229,7 @@ func TestIsAtUserLimit(t *testing.T) {
 	t.Run("unlicensed server", func(t *testing.T) {
 		t.Run("below hard limit", func(t *testing.T) {
 			th := SetupWithStoreMock(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			th.App.Srv().SetLicense(nil)
 
@@ -245,7 +245,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("at hard limit", func(t *testing.T) {
 			th := SetupWithStoreMock(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			th.App.Srv().SetLicense(nil)
 
@@ -261,7 +261,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("above hard limit", func(t *testing.T) {
 			th := SetupWithStoreMock(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			th.App.Srv().SetLicense(nil)
 
@@ -279,7 +279,7 @@ func TestIsAtUserLimit(t *testing.T) {
 	t.Run("licensed server with seat count enforcement", func(t *testing.T) {
 		t.Run("below base limit", func(t *testing.T) {
 			th := Setup(t).InitBasic(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -295,7 +295,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("at base limit but below grace limit", func(t *testing.T) {
 			th := Setup(t).InitBasic(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -314,7 +314,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("at grace limit", func(t *testing.T) {
 			th := SetupWithStoreMock(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -334,7 +334,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("above grace limit", func(t *testing.T) {
 			th := SetupWithStoreMock(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -356,7 +356,7 @@ func TestIsAtUserLimit(t *testing.T) {
 	t.Run("licensed server without seat count enforcement", func(t *testing.T) {
 		t.Run("below unenforced limit", func(t *testing.T) {
 			th := Setup(t).InitBasic(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -375,7 +375,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("at unenforced limit", func(t *testing.T) {
 			th := Setup(t).InitBasic(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -396,7 +396,7 @@ func TestIsAtUserLimit(t *testing.T) {
 
 		t.Run("above unenforced limit", func(t *testing.T) {
 			th := Setup(t).InitBasic(t)
-			defer th.TearDown()
+			defer th.TearDown(t)
 
 			userLimit := 5
 			license := model.NewTestLicense("")
@@ -457,7 +457,7 @@ func TestGracePeriodBehavior(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				th := Setup(t).InitBasic(t)
-				defer th.TearDown()
+				defer th.TearDown(t)
 
 				license := model.NewTestLicense("")
 				license.IsSeatCountEnforced = true
@@ -475,7 +475,7 @@ func TestGracePeriodBehavior(t *testing.T) {
 
 	t.Run("unlicensed server has no grace period", func(t *testing.T) {
 		th := Setup(t).InitBasic(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(nil)
 

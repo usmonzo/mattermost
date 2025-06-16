@@ -51,7 +51,7 @@ func TestGeneratePublicLinkHash(t *testing.T) {
 func TestDoUploadFile(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	teamID := model.NewId()
 	channelID := model.NewId()
@@ -113,7 +113,7 @@ func TestDoUploadFile(t *testing.T) {
 func TestUploadFile(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	channelID := th.BasicChannel.Id
 	filename := "test"
@@ -142,7 +142,7 @@ func TestUploadFile(t *testing.T) {
 func TestParseOldFilenames(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	fileID := model.NewId()
 
@@ -240,7 +240,7 @@ func TestParseOldFilenames(t *testing.T) {
 func TestGetInfoForFilename(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	post := th.BasicPost
 	teamID := th.BasicTeam.Id
@@ -252,7 +252,7 @@ func TestGetInfoForFilename(t *testing.T) {
 func TestFindTeamIdForFilename(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	teamID := th.App.findTeamIdForFilename(th.Context, th.BasicPost, "someid", "somefile.png")
 	assert.Equal(t, th.BasicTeam.Id, teamID)
@@ -267,7 +267,7 @@ func TestFindTeamIdForFilename(t *testing.T) {
 func TestMigrateFilenamesToFileInfos(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	post := th.BasicPost
 	infos := th.App.MigrateFilenamesToFileInfos(th.Context, post)
@@ -302,7 +302,7 @@ func TestMigrateFilenamesToFileInfos(t *testing.T) {
 func TestCreateZipFileAndAddFiles(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	const (
 		zipName   = "zip-file-name-to-heaven.zip"
@@ -359,7 +359,7 @@ func TestCreateZipFileAndAddFiles(t *testing.T) {
 func TestCopyFileInfos(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	teamID := model.NewId()
 	channelID := model.NewId()
@@ -393,7 +393,7 @@ func TestGenerateThumbnailImage(t *testing.T) {
 	t.Run("test generating thumbnail image", func(t *testing.T) {
 		// given
 		th := Setup(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 		img := createDummyImage()
 		dataPath := *th.App.Config().FileSettings.Directory
 		thumbnailName := "thumb.jpg"
@@ -463,7 +463,7 @@ func TestSearchFilesInTeamForUser(t *testing.T) {
 
 	t.Run("should return everything as first page of fileInfos from database", func(t *testing.T) {
 		th, fileInfos := setup(t, false)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		page := 0
 
@@ -484,7 +484,7 @@ func TestSearchFilesInTeamForUser(t *testing.T) {
 
 	t.Run("should not return later pages of fileInfos from database", func(t *testing.T) {
 		th, _ := setup(t, false)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		page := 1
 
@@ -497,7 +497,7 @@ func TestSearchFilesInTeamForUser(t *testing.T) {
 
 	t.Run("should return first page of fileInfos from ElasticSearch", func(t *testing.T) {
 		th, fileInfos := setup(t, true)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		page := 0
 		resultsPage := []string{
@@ -528,7 +528,7 @@ func TestSearchFilesInTeamForUser(t *testing.T) {
 
 	t.Run("should return later pages of fileInfos from ElasticSearch", func(t *testing.T) {
 		th, fileInfos := setup(t, true)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		page := 1
 		resultsPage := []string{
@@ -556,7 +556,7 @@ func TestSearchFilesInTeamForUser(t *testing.T) {
 
 	t.Run("should fall back to database if ElasticSearch fails on first page", func(t *testing.T) {
 		th, fileInfos := setup(t, true)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		page := 0
 
@@ -589,7 +589,7 @@ func TestSearchFilesInTeamForUser(t *testing.T) {
 
 	t.Run("should return nothing if ElasticSearch fails on later pages", func(t *testing.T) {
 		th, _ := setup(t, true)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		page := 1
 
@@ -626,7 +626,7 @@ func TestExtractContentFromFileInfo(t *testing.T) {
 func TestGetLastAccessibleFileTime(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := SetupWithStoreMock(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	r, err := th.App.GetLastAccessibleFileTime()
 	require.Nil(t, err)
@@ -661,7 +661,7 @@ func TestComputeLastAccessibleFileTime(t *testing.T) {
 	mainHelper.Parallel(t)
 	t.Run("Updates the time, if cloud limit is applicable", func(t *testing.T) {
 		th := SetupWithStoreMock(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(model.NewTestLicense("cloud"))
 
@@ -690,7 +690,7 @@ func TestComputeLastAccessibleFileTime(t *testing.T) {
 
 	t.Run("Removes the time, if cloud limit is not applicable", func(t *testing.T) {
 		th := SetupWithStoreMock(t)
-		defer th.TearDown()
+		defer th.TearDown(t)
 
 		th.App.Srv().SetLicense(model.NewTestLicense("cloud"))
 
@@ -720,7 +720,7 @@ func TestComputeLastAccessibleFileTime(t *testing.T) {
 func TestSetFileSearchableContent(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	fileInfo, err := th.App.Srv().Store().FileInfo().Save(th.Context,
 		&model.FileInfo{
@@ -749,7 +749,7 @@ func TestSetFileSearchableContent(t *testing.T) {
 func TestPermanentDeleteFilesByPost(t *testing.T) {
 	mainHelper.Parallel(t)
 	th := Setup(t).InitBasic(t)
-	defer th.TearDown()
+	defer th.TearDown(t)
 
 	t.Run("should delete files for post", func(t *testing.T) {
 		// Create a post with a file attachment.
