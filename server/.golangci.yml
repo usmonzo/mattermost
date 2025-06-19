@@ -85,7 +85,6 @@ linters:
       - linters:
           - errcheck
         path: "\
-          channels/api4/channel_test.go|\
           channels/store/localcachelayer/channel_layer.go|\
           channels/store/localcachelayer/channel_layer_test.go|\
           channels/store/localcachelayer/emoji_layer.go|\
