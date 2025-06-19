@@ -151,7 +151,6 @@ func DecodeJSONFromResponse[T any](r *http.Response) (T, *Response, error) {
 	if r.StatusCode == http.StatusNotModified {
 		return result, BuildResponse(r), nil
 	}
-
 	if err := json.NewDecoder(r.Body).Decode(&result); err != nil {
 		return result, BuildResponse(r), err
 	}
@@ -1321,14 +1320,8 @@ func (c *Client4) GetUsersNotInChannel(ctx context.Context, teamId, channelId st
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersNotInChannel", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersWithoutTeam returns a page of users on the system that aren't on any teams. Page counting starts at 0.
@@ -1339,14 +1332,8 @@ func (c *Client4) GetUsersWithoutTeam(ctx context.Context, page int, perPage int
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersWithoutTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersInGroup returns a page of users in a group. Page counting starts at 0.
@@ -1357,14 +1344,8 @@ func (c *Client4) GetUsersInGroup(ctx context.Context, groupID string, page int,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersInGroup", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersInGroup returns a page of users in a group. Page counting starts at 0.
@@ -1375,14 +1356,8 @@ func (c *Client4) GetUsersInGroupByDisplayName(ctx context.Context, groupID stri
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersInGroupByDisplayName", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersByIds returns a list of users based on the provided user ids.
@@ -1392,11 +1367,8 @@ func (c *Client4) GetUsersByIds(ctx context.Context, userIds []string) ([]*User,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersByIds", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersByIds returns a list of users based on the provided user ids.
@@ -1416,11 +1388,11 @@ func (c *Client4) GetUsersByIdsWithOptions(ctx context.Context, userIds []string
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersByIdsWithOptions", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	result, resp, err := DecodeJSONFromResponse[[]*User](r)
+	if err != nil {
+		return nil, resp, NewAppError("GetUsersByIdsWithOptions", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
-	return list, BuildResponse(r), nil
+	return result, resp, nil
 }
 
 // GetUsersByUsernames returns a list of users based on the provided usernames.
@@ -1430,11 +1402,11 @@ func (c *Client4) GetUsersByUsernames(ctx context.Context, usernames []string) (
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersByUsernames", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	result, resp, err := DecodeJSONFromResponse[[]*User](r)
+	if err != nil {
+		return nil, resp, NewAppError("GetUsersByUsernames", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
-	return list, BuildResponse(r), nil
+	return result, resp, nil
 }
 
 // GetUsersByGroupChannelIds returns a map with channel ids as keys
@@ -1446,9 +1418,11 @@ func (c *Client4) GetUsersByGroupChannelIds(ctx context.Context, groupChannelIds
 	}
 	defer closeBody(r)
 
-	usersByChannelId := map[string][]*User{}
-	json.NewDecoder(r.Body).Decode(&usersByChannelId)
-	return usersByChannelId, BuildResponse(r), nil
+	result, resp, err := DecodeJSONFromResponse[map[string][]*User](r)
+	if err != nil {
+		return nil, resp, err
+	}
+	return result, resp, nil
 }
 
 // SearchUsers returns a list of users based on some search criteria.
@@ -1462,11 +1436,11 @@ func (c *Client4) SearchUsers(ctx context.Context, search *UserSearch) ([]*User,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("SearchUsers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	result, resp, err := DecodeJSONFromResponse[[]*User](r)
+	if err != nil {
+		return nil, resp, NewAppError("SearchUsers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
-	return list, BuildResponse(r), nil
+	return result, resp, nil
 }
 
 // UpdateUser updates a user in the system based on the provided user struct.
@@ -1480,11 +1454,8 @@ func (c *Client4) UpdateUser(ctx context.Context, user *User) (*User, *Response,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var u User
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		return nil, nil, NewAppError("UpdateUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &u, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[*User](r)
 }
 
 // PatchUser partially updates a user in the system. Any missing fields are not updated.
@@ -1498,11 +1469,8 @@ func (c *Client4) PatchUser(ctx context.Context, userId string, patch *UserPatch
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var u User
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		return nil, nil, NewAppError("PatchUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &u, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[*User](r)
 }
 
 // UpdateUserAuth updates a user AuthData (uthData, authService and password) in the system.
@@ -1516,11 +1484,8 @@ func (c *Client4) UpdateUserAuth(ctx context.Context, userId string, userAuth *U
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var ua UserAuth
-	if err := json.NewDecoder(r.Body).Decode(&ua); err != nil {
-		return nil, nil, NewAppError("UpdateUserAuth", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &ua, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[*UserAuth](r)
 }
 
 // UpdateUserMfa activates multi-factor authentication for a user if activate
@@ -1547,11 +1512,8 @@ func (c *Client4) GenerateMfaSecret(ctx context.Context, userId string) (*MfaSec
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var secret MfaSecret
-	if err := json.NewDecoder(r.Body).Decode(&secret); err != nil {
-		return nil, nil, NewAppError("GenerateMfaSecret", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &secret, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[*MfaSecret](r)
 }
 
 // UpdateUserPassword updates a user's password. Must be logged in as the user or be a system administrator.
