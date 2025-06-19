@@ -1481,7 +1481,7 @@ func (s *LogSettings) isValid() *AppError {
 		return NewAppError("LogSettings.isValid", "model.config.is_valid.log.advanced_logging.json", map[string]any{"Error": err}, "", http.StatusBadRequest).Wrap(err)
 	}
 
-	err = cfg.IsValid()
+	err = cfg.IsValid(mlog.MlvlAll)
 	if err != nil {
 		return NewAppError("LogSettings.isValid", "model.config.is_valid.log.advanced_logging.parse", map[string]any{"Error": err}, "", http.StatusBadRequest).Wrap(err)
 	}
@@ -1601,7 +1601,7 @@ func (s *ExperimentalAuditSettings) isValid() *AppError {
 		return NewAppError("ExperimentalAuditSettings.isValid", "model.config.is_valid.log.advanced_logging.json", map[string]any{"Error": err}, "", http.StatusBadRequest).Wrap(err)
 	}
 
-	err = cfg.IsValid()
+	err = cfg.IsValid(mlog.MLvlAuditAll)
 	if err != nil {
 		return NewAppError("ExperimentalAuditSettings.isValid", "model.config.is_valid.log.advanced_logging.parse", map[string]any{"Error": err}, "", http.StatusBadRequest).Wrap(err)
 	}
