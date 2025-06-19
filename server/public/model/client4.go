@@ -1164,14 +1164,8 @@ func (c *Client4) GetUsers(ctx context.Context, page int, perPage int, etag stri
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersWithCustomQueryParameters returns a page of users on the system. Page counting starts at 0.
@@ -1194,14 +1188,8 @@ func (c *Client4) GetUsersInTeam(ctx context.Context, teamId string, page int, p
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersInTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetNewUsersInTeam returns a page of users on a team. Page counting starts at 0.
@@ -1212,14 +1200,8 @@ func (c *Client4) GetNewUsersInTeam(ctx context.Context, teamId string, page int
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetNewUsersInTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetRecentlyActiveUsersInTeam returns a page of users on a team. Page counting starts at 0.
@@ -1230,14 +1212,8 @@ func (c *Client4) GetRecentlyActiveUsersInTeam(ctx context.Context, teamId strin
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetRecentlyActiveUsersInTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetActiveUsersInTeam returns a page of users on a team. Page counting starts at 0.
@@ -1248,14 +1224,8 @@ func (c *Client4) GetActiveUsersInTeam(ctx context.Context, teamId string, page 
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetActiveUsersInTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersNotInTeam returns a page of users who are not in a team. Page counting starts at 0.
@@ -1266,14 +1236,8 @@ func (c *Client4) GetUsersNotInTeam(ctx context.Context, teamId string, page int
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersNotInTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersInChannel returns a page of users in a channel. Page counting starts at 0.
@@ -1284,14 +1248,8 @@ func (c *Client4) GetUsersInChannel(ctx context.Context, channelId string, page 
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersInChannel", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersInChannelByStatus returns a page of users in a channel. Page counting starts at 0. Sorted by Status
@@ -1302,14 +1260,8 @@ func (c *Client4) GetUsersInChannelByStatus(ctx context.Context, channelId strin
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*User
-	if r.StatusCode == http.StatusNotModified {
-		return list, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersInChannelByStatus", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersNotInChannel returns a page of users not in a channel. Page counting starts at 0.
@@ -1388,11 +1340,8 @@ func (c *Client4) GetUsersByIdsWithOptions(ctx context.Context, userIds []string
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	result, resp, err := DecodeJSONFromResponse[[]*User](r)
-	if err != nil {
-		return nil, resp, NewAppError("GetUsersByIdsWithOptions", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return result, resp, nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersByUsernames returns a list of users based on the provided usernames.
@@ -1402,11 +1351,8 @@ func (c *Client4) GetUsersByUsernames(ctx context.Context, usernames []string) (
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	result, resp, err := DecodeJSONFromResponse[[]*User](r)
-	if err != nil {
-		return nil, resp, NewAppError("GetUsersByUsernames", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return result, resp, nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // GetUsersByGroupChannelIds returns a map with channel ids as keys
@@ -1418,11 +1364,7 @@ func (c *Client4) GetUsersByGroupChannelIds(ctx context.Context, groupChannelIds
 	}
 	defer closeBody(r)
 
-	result, resp, err := DecodeJSONFromResponse[map[string][]*User](r)
-	if err != nil {
-		return nil, resp, err
-	}
-	return result, resp, nil
+	return DecodeJSONFromResponse[map[string][]*User](r)
 }
 
 // SearchUsers returns a list of users based on some search criteria.
@@ -1436,11 +1378,8 @@ func (c *Client4) SearchUsers(ctx context.Context, search *UserSearch) ([]*User,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	result, resp, err := DecodeJSONFromResponse[[]*User](r)
-	if err != nil {
-		return nil, resp, NewAppError("SearchUsers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return result, resp, nil
+
+	return DecodeJSONFromResponse[[]*User](r)
 }
 
 // UpdateUser updates a user in the system based on the provided user struct.
@@ -1619,12 +1558,7 @@ func (c *Client4) ConvertUserToBot(ctx context.Context, userId string) (*Bot, *R
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("ConvertUserToBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // ConvertBotToUser converts a bot user to a user.
@@ -1642,11 +1576,7 @@ func (c *Client4) ConvertBotToUser(ctx context.Context, userId string, userPatch
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var u User
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		return nil, nil, NewAppError("ConvertBotToUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &u, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*User](r)
 }
 
 // PermanentDeleteAll permanently deletes all users in the system. This is a local only endpoint
@@ -1689,11 +1619,7 @@ func (c *Client4) GetSessions(ctx context.Context, userId, etag string) ([]*Sess
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*Session
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetSessions", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*Session](r)
 }
 
 // RevokeSession revokes a user session based on the provided user id and session id strings.
@@ -1758,11 +1684,7 @@ func (c *Client4) GetTeamsUnreadForUser(ctx context.Context, userId, teamIdToExc
 	}
 	defer closeBody(r)
 
-	var list []*TeamUnread
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetTeamsUnreadForUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamUnread](r)
 }
 
 // GetUserAudits returns a list of audit based on the provided user id string.
@@ -1774,12 +1696,7 @@ func (c *Client4) GetUserAudits(ctx context.Context, userId string, page int, pe
 	}
 	defer closeBody(r)
 
-	var audits Audits
-	err = json.NewDecoder(r.Body).Decode(&audits)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("GetUserAudits", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return audits, BuildResponse(r), nil
+	return DecodeJSONFromResponse[Audits](r)
 }
 
 // VerifyUserEmail will verify a user's email using the supplied token.
@@ -1800,11 +1717,7 @@ func (c *Client4) VerifyUserEmailWithoutToken(ctx context.Context, userId string
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var u User
-	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-		return nil, nil, NewAppError("VerifyUserEmailWithoutToken", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &u, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*User](r)
 }
 
 // SendVerificationEmail will send an email to the user with the provided email address, if
@@ -1881,11 +1794,7 @@ func (c *Client4) CreateUserAccessToken(ctx context.Context, userId, description
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var uat UserAccessToken
-	if err := json.NewDecoder(r.Body).Decode(&uat); err != nil {
-		return nil, nil, NewAppError("CreateUserAccessToken", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &uat, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*UserAccessToken](r)
 }
 
 // GetUserAccessTokens will get a page of access tokens' id, description, is_active
@@ -1898,11 +1807,7 @@ func (c *Client4) GetUserAccessTokens(ctx context.Context, page int, perPage int
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*UserAccessToken
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUserAccessTokens", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*UserAccessToken](r)
 }
 
 // GetUserAccessToken will get a user access tokens' id, description, is_active
@@ -1915,11 +1820,7 @@ func (c *Client4) GetUserAccessToken(ctx context.Context, tokenId string) (*User
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var uat UserAccessToken
-	if err := json.NewDecoder(r.Body).Decode(&uat); err != nil {
-		return nil, nil, NewAppError("GetUserAccessToken", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &uat, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*UserAccessToken](r)
 }
 
 // GetUserAccessTokensForUser will get a paged list of user access tokens showing id,
@@ -1933,11 +1834,7 @@ func (c *Client4) GetUserAccessTokensForUser(ctx context.Context, userId string,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*UserAccessToken
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUserAccessTokensForUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*UserAccessToken](r)
 }
 
 // RevokeUserAccessToken will revoke a user access token by id. Must have the
@@ -1964,11 +1861,7 @@ func (c *Client4) SearchUserAccessTokens(ctx context.Context, search *UserAccess
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*UserAccessToken
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("SearchUserAccessTokens", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*UserAccessToken](r)
 }
 
 // DisableUserAccessToken will disable a user access token by id. Must have the
@@ -2041,11 +1934,7 @@ func (c *Client4) GetUsersForReporting(ctx context.Context, options *UserReportO
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*UserReport
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetUsersForReporting", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*UserReport](r)
 }
 
 // Bots section
@@ -2062,13 +1951,7 @@ func (c *Client4) CreateBot(ctx context.Context, bot *Bot) (*Bot, *Response, err
 	}
 	defer closeBody(r)
 
-	var resp *Bot
-	err = json.NewDecoder(r.Body).Decode(&resp)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("CreateBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return resp, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // PatchBot partially updates a bot. Any missing fields are not updated.
@@ -2083,13 +1966,7 @@ func (c *Client4) PatchBot(ctx context.Context, userId string, patch *BotPatch) 
 	}
 	defer closeBody(r)
 
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("PatchBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // GetBot fetches the given, undeleted bot.
@@ -2100,13 +1977,7 @@ func (c *Client4) GetBot(ctx context.Context, userId string, etag string) (*Bot,
 	}
 	defer closeBody(r)
 
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("GetBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // GetBotIncludeDeleted fetches the given bot, even if it is deleted.
@@ -2117,13 +1988,7 @@ func (c *Client4) GetBotIncludeDeleted(ctx context.Context, userId string, etag 
 	}
 	defer closeBody(r)
 
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("GetBotIncludeDeleted", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // GetBots fetches the given page of bots, excluding deleted.
@@ -2135,12 +2000,7 @@ func (c *Client4) GetBots(ctx context.Context, page, perPage int, etag string) (
 	}
 	defer closeBody(r)
 
-	var bots BotList
-	err = json.NewDecoder(r.Body).Decode(&bots)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("GetBots", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return bots, BuildResponse(r), nil
+	return DecodeJSONFromResponse[BotList](r)
 }
 
 // GetBotsIncludeDeleted fetches the given page of bots, including deleted.
@@ -2152,12 +2012,7 @@ func (c *Client4) GetBotsIncludeDeleted(ctx context.Context, page, perPage int, 
 	}
 	defer closeBody(r)
 
-	var bots BotList
-	err = json.NewDecoder(r.Body).Decode(&bots)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("GetBotsIncludeDeleted", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return bots, BuildResponse(r), nil
+	return DecodeJSONFromResponse[BotList](r)
 }
 
 // GetBotsOrphaned fetches the given page of bots, only including orphaned bots.
@@ -2169,12 +2024,7 @@ func (c *Client4) GetBotsOrphaned(ctx context.Context, page, perPage int, etag s
 	}
 	defer closeBody(r)
 
-	var bots BotList
-	err = json.NewDecoder(r.Body).Decode(&bots)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("GetBotsOrphaned", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return bots, BuildResponse(r), nil
+	return DecodeJSONFromResponse[BotList](r)
 }
 
 // DisableBot disables the given bot in the system.
@@ -2185,13 +2035,7 @@ func (c *Client4) DisableBot(ctx context.Context, botUserId string) (*Bot, *Resp
 	}
 	defer closeBody(r)
 
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("DisableBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // EnableBot disables the given bot in the system.
@@ -2202,13 +2046,7 @@ func (c *Client4) EnableBot(ctx context.Context, botUserId string) (*Bot, *Respo
 	}
 	defer closeBody(r)
 
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("EnableBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // AssignBot assigns the given bot to the given user
@@ -2219,13 +2057,7 @@ func (c *Client4) AssignBot(ctx context.Context, botUserId, newOwnerId string) (
 	}
 	defer closeBody(r)
 
-	var bot *Bot
-	err = json.NewDecoder(r.Body).Decode(&bot)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("AssignBot", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-
-	return bot, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Bot](r)
 }
 
 // Team Section
@@ -2241,11 +2073,7 @@ func (c *Client4) CreateTeam(ctx context.Context, team *Team) (*Team, *Response,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("CreateTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // GetTeam returns a team based on the provided team id string.
@@ -2255,11 +2083,7 @@ func (c *Client4) GetTeam(ctx context.Context, teamId, etag string) (*Team, *Res
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("GetTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // GetAllTeams returns all teams based on permissions.
@@ -2270,11 +2094,7 @@ func (c *Client4) GetAllTeams(ctx context.Context, etag string, page int, perPag
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*Team
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetAllTeams", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*Team](r)
 }
 
 // GetAllTeamsWithTotalCount returns all teams based on permissions.
@@ -2285,11 +2105,11 @@ func (c *Client4) GetAllTeamsWithTotalCount(ctx context.Context, etag string, pa
 		return nil, 0, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var listWithCount TeamsWithCount
-	if err := json.NewDecoder(r.Body).Decode(&listWithCount); err != nil {
-		return nil, 0, nil, NewAppError("GetAllTeamsWithTotalCount", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	listWithCount, resp, err := DecodeJSONFromResponse[TeamsWithCount](r)
+	if err != nil {
+		return nil, 0, resp, err
 	}
-	return listWithCount.Teams, listWithCount.TotalCount, BuildResponse(r), nil
+	return listWithCount.Teams, listWithCount.TotalCount, resp, nil
 }
 
 // GetAllTeamsExcludePolicyConstrained returns all teams which are not part of a data retention policy.
@@ -2301,11 +2121,7 @@ func (c *Client4) GetAllTeamsExcludePolicyConstrained(ctx context.Context, etag 
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*Team
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetAllTeamsExcludePolicyConstrained", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*Team](r)
 }
 
 // GetTeamByName returns a team based on the provided team name string.
@@ -2315,11 +2131,7 @@ func (c *Client4) GetTeamByName(ctx context.Context, name, etag string) (*Team, 
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("GetTeamByName", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // SearchTeams returns teams matching the provided search term.
@@ -2333,11 +2145,7 @@ func (c *Client4) SearchTeams(ctx context.Context, search *TeamSearch) ([]*Team,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*Team
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("SearchTeams", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*Team](r)
 }
 
 // SearchTeamsPaged returns a page of teams and the total count matching the provided search term.
@@ -2357,11 +2165,11 @@ func (c *Client4) SearchTeamsPaged(ctx context.Context, search *TeamSearch) ([]*
 		return nil, 0, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var listWithCount TeamsWithCount
-	if err := json.NewDecoder(r.Body).Decode(&listWithCount); err != nil {
-		return nil, 0, nil, NewAppError("GetAllTeamsWithTotalCount", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	listWithCount, resp, err := DecodeJSONFromResponse[TeamsWithCount](r)
+	if err != nil {
+		return nil, 0, resp, err
 	}
-	return listWithCount.Teams, listWithCount.TotalCount, BuildResponse(r), nil
+	return listWithCount.Teams, listWithCount.TotalCount, resp, nil
 }
 
 // TeamExists returns true or false if the team exist or not.
@@ -2382,11 +2190,7 @@ func (c *Client4) GetTeamsForUser(ctx context.Context, userId, etag string) ([]*
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var list []*Team
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		return nil, nil, NewAppError("GetTeamsForUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return list, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*Team](r)
 }
 
 // GetTeamMember returns a team member based on the provided team and user id strings.
@@ -2396,14 +2200,7 @@ func (c *Client4) GetTeamMember(ctx context.Context, teamId, userId, etag string
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tm TeamMember
-	if r.StatusCode == http.StatusNotModified {
-		return &tm, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&tm); err != nil {
-		return nil, nil, NewAppError("GetTeamMember", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &tm, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*TeamMember](r)
 }
 
 // UpdateTeamMemberRoles will update the roles on a team for a user.
@@ -2442,11 +2239,7 @@ func (c *Client4) UpdateTeam(ctx context.Context, team *Team) (*Team, *Response,
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("UpdateTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // PatchTeam partially updates a team. Any missing fields are not updated.
@@ -2460,11 +2253,7 @@ func (c *Client4) PatchTeam(ctx context.Context, teamId string, patch *TeamPatch
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("PatchTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // RestoreTeam restores a previously deleted team.
@@ -2474,11 +2263,7 @@ func (c *Client4) RestoreTeam(ctx context.Context, teamId string) (*Team, *Respo
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("RestoreTeam", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // RegenerateTeamInviteId requests a new invite ID to be generated.
@@ -2488,11 +2273,7 @@ func (c *Client4) RegenerateTeamInviteId(ctx context.Context, teamId string) (*T
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("RegenerateTeamInviteId", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // SoftDeleteTeam deletes the team softly (archive only, not permanent delete).
@@ -2525,11 +2306,7 @@ func (c *Client4) UpdateTeamPrivacy(ctx context.Context, teamId string, privacy 
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("UpdateTeamPrivacy", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // GetTeamMembers returns team members based on the provided team id string.
@@ -2540,14 +2317,7 @@ func (c *Client4) GetTeamMembers(ctx context.Context, teamId string, page int, p
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tms []*TeamMember
-	if r.StatusCode == http.StatusNotModified {
-		return tms, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&tms); err != nil {
-		return nil, nil, NewAppError("GetTeamMembers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return tms, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamMember](r)
 }
 
 // GetTeamMembersWithoutDeletedUsers returns team members based on the provided team id string. Additional parameters of sort and exclude_deleted_users accepted as well
@@ -2559,14 +2329,7 @@ func (c *Client4) GetTeamMembersSortAndWithoutDeletedUsers(ctx context.Context, 
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tms []*TeamMember
-	if r.StatusCode == http.StatusNotModified {
-		return tms, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&tms); err != nil {
-		return nil, nil, NewAppError("GetTeamMembersSortAndWithoutDeletedUsers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return tms, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamMember](r)
 }
 
 // GetTeamMembersForUser returns the team members for a user.
@@ -2576,14 +2339,7 @@ func (c *Client4) GetTeamMembersForUser(ctx context.Context, userId string, etag
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tms []*TeamMember
-	if r.StatusCode == http.StatusNotModified {
-		return tms, BuildResponse(r), nil
-	}
-	if err := json.NewDecoder(r.Body).Decode(&tms); err != nil {
-		return nil, nil, NewAppError("GetTeamMembersForUser", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return tms, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamMember](r)
 }
 
 // GetTeamMembersByIds will return an array of team members based on the
@@ -2594,11 +2350,7 @@ func (c *Client4) GetTeamMembersByIds(ctx context.Context, teamId string, userId
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tms []*TeamMember
-	if err := json.NewDecoder(r.Body).Decode(&tms); err != nil {
-		return nil, nil, NewAppError("GetTeamMembersByIds", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return tms, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamMember](r)
 }
 
 // AddTeamMember adds user to a team and return a team member.
@@ -2613,11 +2365,7 @@ func (c *Client4) AddTeamMember(ctx context.Context, teamId, userId string) (*Te
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tm TeamMember
-	if err := json.NewDecoder(r.Body).Decode(&tm); err != nil {
-		return nil, nil, NewAppError("AddTeamMember", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &tm, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*TeamMember](r)
 }
 
 // AddTeamMemberFromInvite adds a user to a team and return a team member using an invite id
@@ -2638,11 +2386,7 @@ func (c *Client4) AddTeamMemberFromInvite(ctx context.Context, token, inviteId s
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tm TeamMember
-	if err := json.NewDecoder(r.Body).Decode(&tm); err != nil {
-		return nil, nil, NewAppError("AddTeamMemberFromInvite", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &tm, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*TeamMember](r)
 }
 
 // AddTeamMembers adds a number of users to a team and returns the team members.
@@ -2661,11 +2405,7 @@ func (c *Client4) AddTeamMembers(ctx context.Context, teamId string, userIds []s
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tms []*TeamMember
-	if err := json.NewDecoder(r.Body).Decode(&tms); err != nil {
-		return nil, nil, NewAppError("AddTeamMembers", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return tms, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamMember](r)
 }
 
 // AddTeamMembers adds a number of users to a team and returns the team members.
@@ -2685,11 +2425,7 @@ func (c *Client4) AddTeamMembersGracefully(ctx context.Context, teamId string, u
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tms []*TeamMemberWithError
-	if err := json.NewDecoder(r.Body).Decode(&tms); err != nil {
-		return nil, nil, NewAppError("AddTeamMembersGracefully", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return tms, BuildResponse(r), nil
+	return DecodeJSONFromResponse[[]*TeamMemberWithError](r)
 }
 
 // RemoveTeamMember will remove a user from a team.
@@ -2710,11 +2446,7 @@ func (c *Client4) GetTeamStats(ctx context.Context, teamId, etag string) (*TeamS
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var ts TeamStats
-	if err := json.NewDecoder(r.Body).Decode(&ts); err != nil {
-		return nil, nil, NewAppError("GetTeamStats", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &ts, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*TeamStats](r)
 }
 
 // GetTotalUsersStats returns a total system user stats.
@@ -2725,11 +2457,7 @@ func (c *Client4) GetTotalUsersStats(ctx context.Context, etag string) (*UsersSt
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var stats UsersStats
-	if err := json.NewDecoder(r.Body).Decode(&stats); err != nil {
-		return nil, nil, NewAppError("GetTotalUsersStats", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &stats, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*UsersStats](r)
 }
 
 // GetTeamUnread will return a TeamUnread object that contains the amount of
@@ -2741,11 +2469,7 @@ func (c *Client4) GetTeamUnread(ctx context.Context, teamId, userId string) (*Te
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var tu TeamUnread
-	if err := json.NewDecoder(r.Body).Decode(&tu); err != nil {
-		return nil, nil, NewAppError("GetTeamUnread", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &tu, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*TeamUnread](r)
 }
 
 // ImportTeam will import an exported team from other app into a existing team.
@@ -2893,11 +2617,7 @@ func (c *Client4) GetTeamInviteInfo(ctx context.Context, inviteId string) (*Team
 		return nil, BuildResponse(r), err
 	}
 	defer closeBody(r)
-	var t Team
-	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
-		return nil, nil, NewAppError("GetTeamInviteInfo", "api.unmarshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return &t, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Team](r)
 }
 
 // SetTeamIcon sets team icon of the team.
@@ -2993,12 +2713,7 @@ func (c *Client4) getAllChannels(ctx context.Context, page int, perPage int, eta
 	}
 	defer closeBody(r)
 
-	var ch ChannelListWithTeamData
-	err = json.NewDecoder(r.Body).Decode(&ch)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("getAllChannels", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return ch, BuildResponse(r), nil
+	return DecodeJSONFromResponse[ChannelListWithTeamData](r)
 }
 
 // GetAllChannelsWithCount get all the channels including the total count. Must be a system administrator.
@@ -3010,12 +2725,11 @@ func (c *Client4) GetAllChannelsWithCount(ctx context.Context, page int, perPage
 	}
 	defer closeBody(r)
 
-	var cwc *ChannelsWithCount
-	err = json.NewDecoder(r.Body).Decode(&cwc)
+	cwc, resp, err := DecodeJSONFromResponse[*ChannelsWithCount](r)
 	if err != nil {
-		return nil, 0, BuildResponse(r), NewAppError("GetAllChannelsWithCount", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
+		return nil, 0, resp, err
 	}
-	return cwc.Channels, cwc.TotalCount, BuildResponse(r), nil
+	return cwc.Channels, cwc.TotalCount, resp, nil
 }
 
 // CreateChannel creates a channel based on the provided channel struct.
@@ -3030,12 +2744,7 @@ func (c *Client4) CreateChannel(ctx context.Context, channel *Channel) (*Channel
 	}
 	defer closeBody(r)
 
-	var ch *Channel
-	err = json.NewDecoder(r.Body).Decode(&ch)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("CreateChannel", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return ch, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Channel](r)
 }
 
 // UpdateChannel updates a channel based on the provided channel struct.
@@ -3050,12 +2759,7 @@ func (c *Client4) UpdateChannel(ctx context.Context, channel *Channel) (*Channel
 	}
 	defer closeBody(r)
 
-	var ch *Channel
-	err = json.NewDecoder(r.Body).Decode(&ch)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("UpdateChannel", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return ch, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Channel](r)
 }
 
 // PatchChannel partially updates a channel. Any missing fields are not updated.
@@ -3070,12 +2774,7 @@ func (c *Client4) PatchChannel(ctx context.Context, channelId string, patch *Cha
 	}
 	defer closeBody(r)
 
-	var ch *Channel
-	err = json.NewDecoder(r.Body).Decode(&ch)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("PatchChannel", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return ch, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Channel](r)
 }
 
 // UpdateChannelPrivacy updates channel privacy
@@ -3087,12 +2786,7 @@ func (c *Client4) UpdateChannelPrivacy(ctx context.Context, channelId string, pr
 	}
 	defer closeBody(r)
 
-	var ch *Channel
-	err = json.NewDecoder(r.Body).Decode(&ch)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("UpdateChannelPrivacy", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return ch, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Channel](r)
 }
 
 // RestoreChannel restores a previously deleted channel. Any missing fields are not updated.
@@ -3103,12 +2797,7 @@ func (c *Client4) RestoreChannel(ctx context.Context, channelId string) (*Channe
 	}
 	defer closeBody(r)
 
-	var ch *Channel
-	err = json.NewDecoder(r.Body).Decode(&ch)
-	if err != nil {
-		return nil, BuildResponse(r), NewAppError("RestoreChannel", "api.marshal_error", nil, "", http.StatusInternalServerError).Wrap(err)
-	}
-	return ch, BuildResponse(r), nil
+	return DecodeJSONFromResponse[*Channel](r)
 }
 
 // CreateDirectChannel creates a direct message channel based on the two user
