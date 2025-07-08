@@ -79,10 +79,10 @@ type Routes struct {
 	OutgoingHooks *mux.Router // 'api/v4/hooks/outgoing'
 	OutgoingHook  *mux.Router // 'api/v4/hooks/outgoing/{hook_id:[A-Za-z0-9]+}'
 
-	OAuth     *mux.Router // 'api/v4/oauth'
-	OAuthApps *mux.Router // 'api/v4/oauth/apps'
-	OAuthApp  *mux.Router // 'api/v4/oauth/apps/{app_id:[A-Za-z0-9]+}'
-
+	OAuth      *mux.Router // 'api/v4/oauth'
+	OAuthApps  *mux.Router // 'api/v4/oauth/apps'
+	OAuthApp   *mux.Router // 'api/v4/oauth/apps/{app_id:[A-Za-z0-9]+}'
+	KeyCloak   *mux.Router // 'api/v4/auth/keycloak'
 	SAML       *mux.Router // 'api/v4/saml'
 	Compliance *mux.Router // 'api/v4/compliance'
 	Cluster    *mux.Router // 'api/v4/cluster'
@@ -242,7 +242,7 @@ func Init(srv *app.Server) (*API, error) {
 	api.BaseRoutes.OAuth = api.BaseRoutes.APIRoot.PathPrefix("/oauth").Subrouter()
 	api.BaseRoutes.OAuthApps = api.BaseRoutes.OAuth.PathPrefix("/apps").Subrouter()
 	api.BaseRoutes.OAuthApp = api.BaseRoutes.OAuthApps.PathPrefix("/{app_id:[A-Za-z0-9]+}").Subrouter()
-
+	api.BaseRoutes.KeyCloak = api.BaseRoutes.APIRoot.PathPrefix("/auth/keycloak").Subrouter()
 	api.BaseRoutes.Compliance = api.BaseRoutes.APIRoot.PathPrefix("/compliance").Subrouter()
 	api.BaseRoutes.Cluster = api.BaseRoutes.APIRoot.PathPrefix("/cluster").Subrouter()
 	api.BaseRoutes.LDAP = api.BaseRoutes.APIRoot.PathPrefix("/ldap").Subrouter()
@@ -363,6 +363,9 @@ func Init(srv *app.Server) (*API, error) {
 	api.InitCustomProfileAttributes()
 	api.InitAuditLogging()
 	api.InitAccessControlPolicy()
+
+	// OIDC BROSSKEV
+	api.InitKeycloakOIDCLocal() // ← ВСТАВЬ СЮДА
 
 	// If we allow testing then listen for manual testing URL hits
 	if *srv.Config().ServiceSettings.EnableTesting {
