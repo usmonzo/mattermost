@@ -112,11 +112,12 @@ func generateUsername(email string) string {
 
 func (api *API) InitKeycloakOIDCLocal() {
 	// Инициализация клиента
-	issuer := ""
-	clientID := ""
-	clientSecret := ""
-	redirectURL := ""
+	issuer := "http://192.168.145.64:8181/realms/master"
+	clientID := "mattermost-client"
+	clientSecret := "d5Nyey9Y8fIp8lEW4DmZ5cZitnsqUSEV"
+	redirectURL := "http://192.168.145.35:8065/api/v4/auth/keycloak/complete"
 
+	
 	provider, err := oidc.NewProvider(context.Background(), issuer)
 	if err != nil {
 		log.Println(err)
