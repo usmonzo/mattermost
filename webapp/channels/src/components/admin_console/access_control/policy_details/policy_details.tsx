@@ -85,7 +85,6 @@ function PolicyDetails({
     const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
     const {formatMessage} = useIntl();
 
-    // Use our hook for ABAC actions (System Console context - no channelId)
     const abacActions = useChannelAccessControlActions();
 
     useEffect(() => {
