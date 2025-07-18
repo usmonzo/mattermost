@@ -43,7 +43,7 @@ const ProductBrandingTeamEdition = (): JSX.Element => {
                 width={116}
                 height={20}
             />
-            <Badge>{'FREE EDITION'}</Badge>
+            <Badge>{''}</Badge>
         </ProductBrandingTeamEditionContainer>
     );
 };
