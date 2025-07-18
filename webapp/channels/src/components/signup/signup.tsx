@@ -204,17 +204,15 @@ const Signup = ({onCustomizeHeader}: SignupProps) => {
             });
         }
 
-        if (isLicensed && enableSignUpWithOpenId) {
-            const url = `${Client4.getOAuthRoute()}/openid/signup${search}`;
-            externalLoginOptions.push({
-                id: 'openid',
-                url,
-                icon: <LoginOpenIDIcon/>,
-                label: OpenIdButtonText || formatMessage({id: 'login.openid', defaultMessage: 'Open ID'}),
-                style: {color: OpenIdButtonColor, borderColor: OpenIdButtonColor},
-                onClick: desktopExternalAuth(url),
-            });
-        }
+        const url = `${Client4.getUrl()}/api/v4/auth/keycloak/start`;
+        externalLoginOptions.push({
+            id: 'openid',
+            url,
+            icon: <LoginOpenIDIcon/>,
+            label: OpenIdButtonText || formatMessage({id: 'login.openid', defaultMessage: 'Open ID'}),
+            style: {color: OpenIdButtonColor, borderColor: OpenIdButtonColor},
+            onClick: desktopExternalAuth(url),
+        });
 
         if (isLicensed && enableLDAP) {
             const newSearchParam = new URLSearchParams(search);

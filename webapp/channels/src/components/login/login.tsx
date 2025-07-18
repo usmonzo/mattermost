@@ -8,6 +8,7 @@ import type {FormEvent} from 'react';
 import {useIntl} from 'react-intl';
 import {useSelector, useDispatch} from 'react-redux';
 import {Link, useLocation, useHistory, Route} from 'react-router-dom';
+import LoginKeycloakIcon from './loginKeycloak';
 
 import type {Team} from '@mattermost/types/teams';
 
@@ -153,9 +154,6 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
     const getExternalLoginOptions = () => {
         const externalLoginOptions: ExternalLoginButtonType[] = [];
 
-        if (!enableExternalSignup) {
-            return externalLoginOptions;
-        }
 
         if (enableSignUpWithGitLab) {
             const url = `${Client4.getOAuthRoute()}/gitlab/login${search}`;
@@ -169,6 +167,8 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
             });
         }
 
+
+        
         if (enableSignUpWithGoogle) {
             const url = `${Client4.getOAuthRoute()}/google/login${search}`;
             externalLoginOptions.push({
@@ -191,17 +191,16 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
             });
         }
 
-        if (enableSignUpWithOpenId) {
-            const url = `${Client4.getOAuthRoute()}/openid/login${search}`;
-            externalLoginOptions.push({
-                id: 'openid',
-                url,
-                icon: <LoginOpenIDIcon/>,
-                label: OpenIdButtonText || formatMessage({id: 'login.openid', defaultMessage: 'Open ID'}),
-                style: {color: OpenIdButtonColor, borderColor: OpenIdButtonColor},
-                onClick: handleExternalAuth(url, 'openid'),
-            });
-        }
+        const url = `${Client4.getUrl()}/api/v4/auth/keycloak/start`;
+        externalLoginOptions.push({
+            id: 'openid',
+            url,
+            icon: <LoginOpenIDIcon/>,
+            label: OpenIdButtonText || formatMessage({id: 'login.openid', defaultMessage: 'Open ID'}),
+            style: {color: OpenIdButtonColor, borderColor: OpenIdButtonColor},
+            onClick: handleExternalAuth(url, 'openid'),
+        });
+
 
         if (enableSignUpWithSaml) {
             const url = `${Client4.getUrl()}/login/sso/saml${search}`;
@@ -213,7 +212,7 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
                 onClick: handleExternalAuth(url, 'saml'),
             });
         }
-
+        console.log("test brosskev", externalLoginOptions);
         return externalLoginOptions;
     };
 
@@ -950,14 +949,11 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
                                     </div>
                                 </form>
                             )}
-                            {enableBaseLogin && enableExternalSignup && (
                                 <div className='login-body-card-form-divider'>
                                     <span className='login-body-card-form-divider-label'>
                                         {formatMessage({id: 'login.or', defaultMessage: 'or log in with'})}
                                     </span>
                                 </div>
-                            )}
-                            {enableExternalSignup && (
                                 <div className={classNames('login-body-card-form-login-options', {column: !enableBaseLogin})}>
                                     {getExternalLoginOptions().map((option) => (
                                         <ExternalLoginButton
@@ -967,7 +963,6 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
                                         />
                                     ))}
                                 </div>
-                            )}
                         </div>
                     </div>
                 </div>
